@@ -1,0 +1,33 @@
+name: compliance-ci
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# Method 3: ciPipelines. No LUNAR_COMPONENT and no LUNAR_COMPONENT_INFER — the
+# agent attributes the traced run to the compliance component purely via the
+# workflow-name -> ciPipelines match.
+jobs:
+  compliance:
+    name: compliance
+    runs-on: localdev-e2e-test-37478242776-1-github-5-e2e
+    defaults:
+      run:
+        working-directory: compliance
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          clean: true
+      - name: QA marker
+        run: /bin/echo "lunar-qa::ci-pipelines"
+      - name: Install semgrep
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install --quiet semgrep
+      - name: Semgrep scan
+        run: |
+          . .venv/bin/activate
+          semgrep scan --config auto . || true
