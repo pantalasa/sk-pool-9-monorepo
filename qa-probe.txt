@@ -1,2 +1,3 @@
 Probe B target. Touching only this repo-root file (no component path) exercises
 cwd attribution (method 5) — the e2e test appends a line here and pushes.
+probe B TEST_ID=f8fb3bca5 1791275232
